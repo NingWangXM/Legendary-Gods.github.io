@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Legendary Gods · 传奇之神 · 由凝望骁孟制作</title>
+<meta name="description" content="Legendary Gods（传奇之神）——由B站凝望骁孟制作的烦人的村民整合包。高度还原战神之刃技能，高强度NOOP AI，Woopie战斗伙伴。">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-soft: rgba(0, 0, 0, 0.02);
+    --text: #2c3e50;
+    --text-secondary: #3a5169;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --border: #eaecef;
+    --radius: 12px;
+    --shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.12);
+    --max-width: 1200px;
+    --navbar-height: 80px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--navbar-height) + 20px);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+                 Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--primary); text-decoration: none; transition: color 0.2s ease; }
+  a:hover { text-decoration: underline; }
+  img, svg { max-width: 100%; display: block; }
+
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; }
+  .section { padding: 5rem 0; }
+
+  .section-head {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 3.5rem;
+  }
+
+  .section-head .eyebrow {
+    display: inline-block;
+    padding: 4px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg-soft);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .section-head h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+    font-weight: 700;
+    margin: 14px 0 12px;
+    color: var(--text);
+  }
+
+  .section-head p { color: var(--text-secondary); font-size: 17px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background-color: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    text-decoration: none;
+  }
+
+  .btn-default {
+    background-color: transparent;
+    color: var(--primary);
+    border-color: var(--primary);
+  }
+  .btn-default:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .btn-disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .btn-lg { padding: 0.9rem 2rem; font-size: 1.05rem; }
+
+  .navbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--navbar-height);
+    background-color: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .navbar.scrolled {
+    border-bottom-color: var(--border);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  }
+
+  .navbar .container { display: flex; align-items: center; width: 100%; }
+
+  .navbar .brand {
+    display: flex;
+    align-items: center;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .navbar .brand:hover { text-decoration: none; }
+
+  .navbar .logo {
+    display: grid;
+    place-items: center;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    margin-right: 10px;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .navbar .nav-links {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .navbar .nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 15px;
+    padding: 0.25rem 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    text-decoration: none;
+  }
+  .navbar .nav-link:hover,
+  .navbar .nav-link.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    text-decoration: none;
+  }
+
+  .navbar .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 1.5rem;
+  }
+
+  .navbar .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px; height: 40px;
+    margin-left: auto;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .navbar .nav-toggle span {
+    display: block;
+    width: 18px; height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .navbar .nav-toggle[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .navbar .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .navbar .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .hero {
+    padding: calc(var(--navbar-height) + 3rem) 0 4rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 1.2rem 0 1rem;
+    line-height: 1.2;
+  }
+
+  .hero .highlight { color: var(--primary); }
+
+  .hero .lead {
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+  }
+
+  .hero .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+
+  .hero .hero-note {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .stats-bar {
+    padding: 3rem 0;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .stat-item strong {
+    display: block;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+  }
+
+  .stat-item span { font-size: 0.95rem; color: var(--text-secondary); }
+
+  .feature-panel { padding: 5rem 0 6rem; background-color: var(--bg-soft); }
+
+  .feature-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .feature-item {
+    background: var(--bg);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border);
+  }
+
+  .feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .feature-item h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .feature-item h3 .icon {
+    display: grid;
+    place-items: center;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(59, 130, 246, 0.12);
+    color: var(--primary);
+    flex-shrink: 0;
+  }
+  .feature-item h3 .icon svg { width: 18px; height: 18px; }
+
+  .feature-item p { color: var(--text-secondary); line-height: 1.7; font-size: 15px; }
+
+  .timeline {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 8px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-bottom: 2.5rem;
+  }
+  .timeline-item:last-child { padding-bottom: 0; }
+
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -32px; top: 6px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+
+  .timeline-date {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .timeline-item h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .timeline-item p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .guide-section { padding: 5rem 0; }
+
+  .guide-steps {
+    max-width: 760px;
+    margin: 0 auto;
+    counter-reset: step;
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .guide-step {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 1.5rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .guide-step:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .guide-step .step-num {
+    display: grid;
+    place-items: center;
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .guide-step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+  .guide-step p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; }
+
+  .guide-step code {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.9em;
+    color: var(--primary);
+    font-family: "SFMono-Regular", Consolas, monospace;
+  }
+
+  .content-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.95em;
+  }
+
+  .content-table th,
+  .content-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .content-table th {
+    font-weight: 600;
+    color: var(--text);
+    background: var(--bg-soft);
+  }
+
+  .content-table td { color: var(--text-secondary); }
+
+  .download-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .download-card {
+    position: relative;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .download-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .download-card .hot-tag {
+    position: absolute;
+    top: -11px; left: 20px;
+    padding: 3px 12px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .download-card h3 { font-size: 1.2rem; margin-bottom: 4px; color: var(--text); }
+  .download-card .version {
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .download-card p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 1.5rem;
+    line-height: 1.7;
+  }
+  .download-card .btn { width: 100%; }
+
+  .footer {
+    padding: 4rem 0 2rem;
+    background: var(--bg-soft);
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(3, 1fr);
+    gap: 3rem 2rem;
+  }
+
+  .footer-brand p {
+    margin-top: 1rem;
+    max-width: 300px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .footer h4 { font-size: 14px; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+
+  .footer ul { list-style: none; display: grid; gap: 0.7rem; }
+
+  .footer ul a {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .footer ul a:hover { color: var(--primary); text-decoration: none; }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .footer-bottom nav { display: flex; gap: 1.5rem; }
+  .footer-bottom a { color: var(--text-secondary); text-decoration: none; }
+  .footer-bottom a:hover { color: var(--text); text-decoration: none; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .section { padding: 3.5rem 0; }
+    .hero { padding: calc(var(--navbar-height) + 2rem) 0 3rem; }
+    .feature-panel { padding: 3.5rem 0 4rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-brand { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 820px) {
+    .navbar .nav-toggle { display: flex; }
+    .navbar .nav-links {
+      position: absolute;
+      top: var(--navbar-height);
+      left: 0; right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 1rem 2rem 1.5rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.15);
+      display: none;
+    }
+    .navbar .nav-links.open { display: flex; }
+    .navbar .nav-links li { width: 100%; }
+    .navbar .nav-link {
+      display: block;
+      padding: 0.75rem 0;
+      font-size: 16px;
+      border-bottom: none;
+    }
+    .navbar .nav-actions {
+      flex-direction: column;
+      align-items: stretch;
+      margin-left: 0;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .navbar .nav-actions .btn { width: 100%; }
+  }
+
+  @media (max-width: 620px) {
+    .container { padding: 0 1.25rem; }
+    .stats-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+    .download-grid { grid-template-columns: 1fr; }
+    .guide-step { flex-direction: column; gap: 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body id="top">
+
+  <header class="navbar" id="navbar">
+    <div class="container">
+      <a class="brand" href="#top">
+        <span class="logo" aria-hidden="true">⚔</span>
+        Legendary Gods
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="打开导航菜单" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a class="nav-link" href="#features">核心特色</a></li>
+        <li><a class="nav-link" href="#updates">更新日志</a></li>
+        <li><a class="nav-link" href="#guide">安装教程</a></li>
+        <li><a class="nav-link" href="#download">下载</a></li>
+        <li class="nav-actions">
+          <a class="btn btn-default" href="https://space.bilibili.com/3546580609140941" target="_blank" rel="noopener">B站主页</a>
+          <a class="btn btn-primary" href="#download">获取整合包</a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="hero">
+      <div class="container">
+        <span class="eyebrow" style="display:inline-block;padding:4px 14px;border:1px solid var(--border);border-radius:999px;background:var(--bg-soft);color:var(--text-secondary);font-size:13px;font-weight:600;">
+          由 B站 @凝望骁孟 制作 · 烦人的村民整合包
+        </span>
+        <h1>Legendary Gods<br><span class="highlight">传奇之神</span></h1>
+        <p class="lead">
+          高度还原的战神之刃技能，高强度的 NPC，woopie、星火燎原和钻石西洋剑还拥有特殊技能，拼刀，弹反，处决，踢技——熟练运用这些技巧，在这里击败烦村的角色吧！
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary btn-lg" href="#download">立即下载</a>
+          <a class="btn btn-default btn-lg" href="#guide">查看安装教程</a>
+        </div>
+        <p class="hero-note">1.20.1 Forge · 需 Java 17 · 建议 4GB+ 内存</p>
+      </div>
+    </section>
+
+    <section class="stats-bar">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item reveal">
+            <strong data-count="16" data-suffix="万+">16万+</strong>
+            <span>B站系列播放量</span>
+          </div>
+          <div class="stat-item reveal">
+            <strong data-count="3464" data-suffix="+">3,464+</strong>
+            <span>视频点赞</span>
+          </div>
+          <div class="stat-item reveal">
+            <strong data-count="459" data-suffix="+">459+</strong>
+            <span>收藏人数</span>
+          </div>
+          <div class="stat-item reveal">
+            <strong data-count="2877" data-suffix="+">2,877+</strong>
+            <span>投币支持</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="feature-panel" id="features">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">核心特色</span>
+          <h2>为什么选择 Legendary Gods</h2>
+          <p>从战斗手感、AI 表现到自定义武器，每一个细节都经过反复打磨。</p>
+        </div>
+
+        <div class="feature-wrapper">
+          <article class="feature-item reveal">
+            <h3>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                  <path d="M14.5 3.5 20.5 9.5 9 21H3v-6L14.5 3.5Z"/>
+                  <path d="m12 6 6 6"/>
+                </svg>
+              </span>
+              战神之刃技能
+            </h3>
+            <p>高度还原的战神之刃技能，副手无woopie使用史诗战斗技能，即可触发觉醒，当副手有woopie时，释放重击(计划把重击改成被动)，拥有独特刀光(定制)，发光材质</p>
+          </article>
+
+          <article class="feature-item reveal">
+            <h3>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>
+                </svg>
+              </span>
+              woopie
+            </h3>
+            <p>该物品现在仍未完善，表现为疾跑时使用史诗战斗技能，会使用woopie向视角方向推进(后续增加更多效果)</p>
+          </article>
+
+          <article class="feature-item reveal">
+            <h3>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/>
+                </svg>
+              </span>
+              蓝恶魔三叉戟
+            </h3>
+            <p>手持该物品时，潜行右键触发三叉戟狂欢节，玩家获得超高级的缓慢效果(后续会修改，该物品计划将触发方式更改为史诗战斗技能)</p>
+          </article>
+
+          <article class="feature-item reveal">
+            <h3>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3l7.5 3.2v5.6c0 4.6-3.1 7.9-7.5 9.2-4.4-1.3-7.5-4.6-7.5-9.2V6.2L12 3Z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+              </span>
+              高强度的NOOP AI
+            </h3>
+            <p>NOOP可以使用星火燎原，活塞攻击，合成红宝石重剑，还有二阶段转换，二阶段会进行更高强度的攻击(不推荐挑战)</p>
+          </article>
+
+          <article class="feature-item reveal">
+            <h3>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7.5" height="7.5" rx="2"/>
+                  <rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/>
+                  <rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/>
+                  <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/>
+                </svg>
+              </span>
+              二创元素
+            </h3>
+            <p>整合包加入部分二创元素，如魔法末影珍珠(无限投掷，有冷却)，处决等原著中没有的东西</p>
+          </article>
+
+          <article class="feature-item reveal">
+            <h3>
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="8" r="3.4"/>
+                  <path d="M2.6 20a6.4 6.4 0 0 1 12.8 0"/>
+                  <path d="M16.5 5.2a3 3 0 0 1 0 5.6M18 20a6.6 6.6 0 0 0-1.8-4.5"/>
+                </svg>
+              </span>
+              已恢复更新
+            </h3>
+            <p>作者在2025年5月25日之前一直在稳定更新，但是在5月25之后宣布停更，之后在2026年6月重新恢复更新，现已发布LG2.0 2测</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="updates">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">更新日志</span>
+          <h2>Legendary Gods 更新记录</h2>
+          <p>以下为 2025 年 5 月 25 日之后，整合包更名 Legendary Gods 以来的全部更新。</p>
+        </div>
+
+        <div class="timeline">
+          <article class="timeline-item reveal">
+            <span class="timeline-date">2025 年 5 月 25 日</span>
+            <h3>Legendary Gods 2.0 Bate</h3>
+            <p>整合包正式以Legendary Gods 为名称发布 2.0 Bate 版本，本以为是全新的开始，但……</p>
+          </article>
+
+          <article class="timeline-item reveal">
+            <span class="timeline-date">2026 年 6 月 29 日</span>
+            <h3>Legendary Gods 2.0 Batefix2</h3>
+            <p>发布 2.0 Bate 修复版,针对部分已知问题进行修正,提升了部分稳定性,随后恢复更新</p>
+          </article>
+
+          <article class="timeline-item reveal">
+            <span class="timeline-date">2026 年 7 月 8 日</span>
+            <h3>Legendary Gods 2.0 1Test</h3>
+            <p>发布 2.0 第一个测试版本，引入更多新内容与机制调整。</p>
+          </article>
+
+          <article class="timeline-item reveal">
+            <span class="timeline-date">2026 年 8 月 18 日</span>
+            <h3>Legendary Gods 2.0 2Test</h3>
+            <p>发布 2.0 第二个测试版本，继续优化体验并扩充游戏内容。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide-section" id="guide">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">安装教程</span>
+          <h2>如何安装 Legendary Gods</h2>
+          <p>按照以下步骤，几分钟内即可开始游玩。</p>
+        </div>
+
+        <div class="guide-steps">
+          <article class="guide-step reveal">
+            <div class="step-num">1</div>
+            <div>
+              <h3>准备运行环境</h3>
+              <p>确保你已安装 <strong>Java 17</strong>（推荐 Eclipse Temurin 或 Oracle JDK）。整合包基于 <strong>Minecraft 1.20.1 Forge</strong>，请确认启动器支持该版本。</p>
+            </div>
+          </article>
+
+          <article class="guide-step reveal">
+            <div class="step-num">2</div>
+            <div>
+              <h3>选择启动器并分配内存</h3>
+              <p>推荐使用 <strong>FCL</strong> / <strong>ZL2</strong> / <strong>PCL2</strong> 启动器，分配至少 <strong>4GB 内存</strong>，建议 6GB 以上以获得更流畅的体验。</p>
+            </div>
+          </article>
+
+          <article class="guide-step reveal">
+            <div class="step-num">3</div>
+            <div>
+              <h3>导入整合包</h3>
+              <p>从作者 B站视频评论区或指定渠道获取整合包文件（通常为 <code>.zip</code> 格式）。在启动器中选择“导入整合包”，选中下载的文件，等待自动完成安装。</p>
+            </div>
+          </article>
+
+          <article class="guide-step reveal">
+            <div class="step-num">4</div>
+            <div>
+              <h3>启动游戏</h3>
+              <p>安装完成后，在启动器版本列表中选择 <strong>Legendary Gods</strong>，点击启动。首次加载可能需要较长时间，请耐心等待。</p>
+            </div>
+          </article>
+
+          <article class="guide-step reveal">
+            <div class="step-num">5</div>
+            <div>
+              <h3>开始游玩</h3>
+              <p>进入游戏后，建议先查看任务书了解整合包引导内容。熟悉战斗操作后，尝试挑战 NOOP、使用蓝恶魔三叉戟与 woopie，体验完整的烦村战斗节奏。</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="reveal" style="max-width:760px;margin:3rem auto 0;">
+          <h3 style="font-size:1.2rem;font-weight:700;margin-bottom:1rem;text-align:center;">系统要求</h3>
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th>项目</th>
+                <th>最低要求</th>
+                <th>推荐配置</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Java 版本</td>
+                <td>Java 17</td>
+                <td>Java 17（Temurin）</td>
+              </tr>
+              <tr>
+                <td>内存</td>
+                <td>4 GB（分配给游戏）</td>
+                <td>6 GB 或更多</td>
+              </tr>
+              <tr>
+                <td>Minecraft</td>
+                <td>1.20.1 Forge</td>
+                <td>1.20.1 Forge（最新版）</td>
+              </tr>
+              <tr>
+                <td>存储空间</td>
+                <td>2 GB 可用空间</td>
+                <td>4 GB 以上</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="download" style="padding-top:0">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">下载</span>
+          <h2>获取整合包</h2>
+          <p>整合包通过作者 B站视频评论区或指定渠道发布，请关注 @凝望骁孟 获取最新版本。</p>
+        </div>
+
+        <div class="download-grid">
+          <article class="download-card reveal">
+            <span class="hot-tag">最新</span>
+            <h3>Legendary Gods</h3>
+            <span class="version">2.0 2Test</span>
+            <p>完整整合包，包含战神之刃技能、woopie 战斗伙伴、高强度 NOOP AI 及二创元素。</p>
+            <a class="btn btn-primary" href="https://qun.qq.com/universal-share/share?ac=1&authKey=OBHwxk9JTVBj2TCl59%2FUBl2lbL9XpK2v504gpN6qYk6Z4%2Fdt%2Bk%2F7jd%2BLppKZF0pY&busi_data=eyJncm91cENvZGUiOiIxMDA3ODMwMjQxIiwidG9rZW4iOiJ0YmRvQVlIdzNCRTZ4VndFanZMSS9reFJEWncvcVo3VXhtaWZhaVFyZDUzTXYzWEs4czhIQmlFOVVzbGlkSENQIiwidWluIjoiMzc2NTIxNDU3NCJ9&data=49u9yQsoxfPkjPl3h4Cpwt-6Xh5C5MqSWNmUrvGShWLqfYOqcUR0e_4SF2sBCTpU-2JkfMZ45a3YzBEFZYjKzA&svctype=4&tempid=h5_group_info" target="_blank" rel="noopener">暂时只能在QQ群获取</a>
+          </article>
+
+          <article class="download-card reveal">
+            <h3>整合包交流群</h3>
+            <span class="version">QQ 群</span>
+            <p>加入交流群获取整合包文件、安装帮助与最新更新通知。进群记得四连截图哦。</p>
+            <a class="btn btn-default" href="https://qun.qq.com/universal-share/share?ac=1&authKey=OBHwxk9JTVBj2TCl59%2FUBl2lbL9XpK2v504gpN6qYk6Z4%2Fdt%2Bk%2F7jd%2BLppKZF0pY&busi_data=eyJncm91cENvZGUiOiIxMDA3ODMwMjQxIiwidG9rZW4iOiJ0YmRvQVlIdzNCRTZ4VndFanZMSS9reFJEWncvcVo3VXhtaWZhaVFyZDUzTXYzWEs4czhIQmlFOVVzbGlkSENQIiwidWluIjoiMzc2NTIxNDU3NCJ9&data=49u9yQsoxfPkjPl3h4Cpwt-6Xh5C5MqSWNmUrvGShWLqfYOqcUR0e_4SF2sBCTpU-2JkfMZ45a3YzBEFZYjKzA&svctype=4&tempid=h5_group_info" target="_blank" rel="noopener">查看群号</a>
+          </article>
+
+          <article class="download-card reveal">
+            <h3>作者 B站主页</h3>
+            <span class="version">@凝望骁孟</span>
+            <p>关注作者获取第一手更新动态、整合包演示视频与技术分享。</p>
+            <a class="btn btn-default" href="https://space.bilibili.com/3546580609140941" target="_blank" rel="noopener">前往关注</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="reveal" style="padding:3.5rem 2rem;border-radius:16px;text-align:center;color:#fff;background:linear-gradient(135deg,#2c3e50,#1a252f);">
+          <h2 style="font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:12px;">
+            准备好加入战斗了吗？
+          </h2>
+          <p style="max-width:540px;margin:0 auto;color:rgba(255,255,255,0.75);font-size:1.05rem;">
+            下载 Legendary Gods，体验高度还原的战神之刃技能，与 Herobrine 作战
+          </p>
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:2rem;">
+            <a class="btn btn-primary btn-lg" href="#download">获取整合包</a>
+            <span class="btn btn-disabled btn-lg">查看安装教程(无法使用)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="#top" style="text-decoration:none;">
+            <span class="logo" style="width:32px;height:32px;font-size:16px;" aria-hidden="true">⚔</span>
+            Legendary Gods
+          </a>
+          <p>由 B站 @凝望骁孟 制作的烦人的村民整合包，还原战神之刃技能，拥有良好的优化</p>
+        </div>
+
+        <div>
+          <h4>整合包</h4>
+          <ul>
+            <li><a href="#features">核心特色</a></li>
+            <li><a href="#updates">更新日志</a></li>
+            <li><a href="#download">下载</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>资源</h4>
+          <ul>
+            <li><a href="#guide">安装教程</a></li>
+            <li><a href="https://space.bilibili.com/3546580609140941" target="_blank" rel="noopener">B站主页</a></li>
+            <li><a href="https://www.mcmod.cn/author/34283.html" target="_blank" rel="noopener">MC百科</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>关注作者</h4>
+          <ul>
+            <li><a href="https://space.bilibili.com/3546580609140941" target="_blank" rel="noopener">B站 @凝望骁孟</a></li>
+            <li><a href="https://qun.qq.com/universal-share/share?ac=1&authKey=OBHwxk9JTVBj2TCl59%2FUBl2lbL9XpK2v504gpN6qYk6Z4%2Fdt%2Bk%2F7jd%2BLppKZF0pY&busi_data=eyJncm91cENvZGUiOiIxMDA3ODMwMjQxIiwidG9rZW4iOiJ0YmRvQVlIdzNCRTZ4VndFanZMSS9reFJEWncvcVo3VXhtaWZhaVFyZDUzTXYzWEs4czhIQmlFOVVzbGlkSENQIiwidWluIjoiMzc2NTIxNDU3NCJ9&data=49u9yQsoxfPkjPl3h4Cpwt-6Xh5C5MqSWNmUrvGShWLqfYOqcUR0e_4SF2sBCTpU-2JkfMZ45a3YzBEFZYjKzA&svctype=4&tempid=h5_group_info" target="_blank" rel="noopener">整合包交流群</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Legendary Gods · 整合包版权归 @凝望骁孟 所有.</span>
+        <nav>
+          <a href="#">免责声明</a>
+          <a href="#">使用条款</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      var navbar = document.getElementById("navbar");
+      var onScroll = function () {
+        navbar.classList.toggle("scrolled", window.scrollY > 8);
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      var toggle = document.getElementById("navToggle");
+      var navLinks = document.getElementById("navLinks");
+
+      function closeMenu() {
+        navLinks.classList.remove("open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "打开导航菜单");
+      }
+
+      toggle.addEventListener("click", function () {
+        var open = navLinks.classList.toggle("open");
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.setAttribute("aria-label", open ? "关闭导航菜单" : "打开导航菜单");
+      });
+
+      navLinks.addEventListener("click", function (e) {
+        if (e.target.closest("a")) closeMenu();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeMenu();
+      });
+
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 820) closeMenu();
+      });
+
+      var revealEls = document.querySelectorAll(".reveal");
+
+      if (!("IntersectionObserver" in window) || reduceMotion) {
+        revealEls.forEach(function (el) { el.classList.add("in"); });
+      } else {
+        var revealObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+        revealEls.forEach(function (el) { revealObserver.observe(el); });
+      }
+
+      function formatInt(n) {
+        return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function animateCount(el) {
+        var target = parseFloat(el.dataset.count);
+        var decimals = parseInt(el.dataset.decimals || "0", 10);
+        var suffix = el.dataset.suffix || "";
+
+        if (isNaN(target)) return;
+
+        function render(value) {
+          el.textContent = (decimals > 0 ? value.toFixed(decimals) : formatInt(value)) + suffix;
+        }
+
+        if (reduceMotion) { render(target); return; }
+
+        var duration = 1400;
+        var startTime = null;
+
+        function tick(now) {
+          if (startTime === null) startTime = now;
+          var progress = Math.min((now - startTime) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          render(target * eased);
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            render(target);
+          }
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      var countEls = document.querySelectorAll("[data-count]");
+
+      if (!("IntersectionObserver" in window)) {
+        countEls.forEach(animateCount);
+      } else {
+        var countObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              animateCount(entry.target);
+              countObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.6 });
+
+        countEls.forEach(function (el) { countObserver.observe(el); });
+      }
+    })();
+  </script>
+
+</body>
+</html>
